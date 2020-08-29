@@ -55,6 +55,24 @@ const createOrder = async (context: any) => {
         created_at: new Date()
     };
     orders.push(order);
+    setInterval(() => {
+        order.state = states.PREPARANDO;
+        order.state_name = states[states.PREPARANDO];
+        console.log(`EL PEDIDO ${order.id} HA SIDO VISTO Y HA CAMBIADO A ESTADO DE PREPARACIÓN`);
+    }, 10000);
+
+    setInterval(() => {
+        order.state = states.LISTO;
+        order.state_name = states[states.LISTO];
+        console.log(`EL PEDIDO ${order.id} FINALIZO SU PREPARACIÓN Y HA CAMBIADO SU ESTADO A LISTO`);
+    }, 15000);
+    
+    setInterval(() => {
+        order.state = states.LISTO;
+        order.state_name = states[states.LISTO];
+        console.log(`EL REPARTIDOR PASO A RECOGER EL PEDIDO ${order.id} Y HA CAMBIADO SU ESTADO A ENVIADO`);
+    }, 20000);
+
     context.response.body = {
         success: true,
         data: order
