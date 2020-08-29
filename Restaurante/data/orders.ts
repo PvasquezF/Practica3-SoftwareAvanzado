@@ -8,7 +8,7 @@ export enum states {
     'ENTREGADO'
 }
 
-interface order {
+export interface order {
     id: string,
     state: states,
     state_name: string,

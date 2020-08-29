@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { menus } from "../data/menu.ts";
-import { orders, states } from "../data/orders.ts";
+import { orders, states, order } from "../data/orders.ts";
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
 
 const getIndex = (context: any) => {
@@ -55,23 +56,17 @@ const createOrder = async (context: any) => {
         created_at: new Date()
     };
     orders.push(order);
-    setInterval(() => {
+    setTimeout(() => {
         order.state = states.PREPARANDO;
         order.state_name = states[states.PREPARANDO];
         console.log(`EL PEDIDO ${order.id} HA SIDO VISTO Y HA CAMBIADO A ESTADO DE PREPARACIÓN`);
     }, 10000);
 
-    setInterval(() => {
+    setTimeout(() => {
         order.state = states.LISTO;
         order.state_name = states[states.LISTO];
         console.log(`EL PEDIDO ${order.id} FINALIZO SU PREPARACIÓN Y HA CAMBIADO SU ESTADO A LISTO`);
     }, 15000);
-    
-    setInterval(() => {
-        order.state = states.LISTO;
-        order.state_name = states[states.LISTO];
-        console.log(`EL REPARTIDOR PASO A RECOGER EL PEDIDO ${order.id} Y HA CAMBIADO SU ESTADO A ENVIADO`);
-    }, 20000);
 
     context.response.body = {
         success: true,
@@ -79,4 +74,62 @@ const createOrder = async (context: any) => {
     };
 }
 
-export { getIndex, getMenus, getOrder, createOrder };
+const send = (context: any) => {
+    let foundOrder: order = undefined;
+    if (context.params && context.params.id) {
+        for (let order of orders) {
+            if (order.id === context.params.id) {
+                foundOrder = order;
+                break;
+            }
+        }
+    }
+    if (foundOrder) {
+        foundOrder.state = states.ENVIADO;
+        foundOrder.state_name = states[states.ENVIADO];
+        context.response.body = {
+            success: true,
+            data: foundOrder
+        };
+    } else {
+        context.response.body = {
+            success: false,
+            error: {
+                errors: [
+                    `El pedido ingresado no existe.`
+                ]
+            }
+        }
+    }
+}
+
+const delivery = (context: any) => {
+    let foundOrder: order = undefined;
+    if (context.params && context.params.id) {
+        for (let order of orders) {
+            if (order.id === context.params.id) {
+                foundOrder = order;
+                break;
+            }
+        }
+    }
+    if (foundOrder) {
+        foundOrder.state = states.ENTREGADO;
+        foundOrder.state_name = states[states.ENTREGADO];
+        context.response.body = {
+            success: true,
+            data: foundOrder
+        };
+    } else {
+        context.response.body = {
+            success: false,
+            error: {
+                errors: [
+                    `El pedido ingresado no existe.`
+                ]
+            }
+        }
+    }
+}
+
+export { getIndex, getMenus, getOrder, createOrder, send, delivery };
