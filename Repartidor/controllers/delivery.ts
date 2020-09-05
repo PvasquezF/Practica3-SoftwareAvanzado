@@ -6,7 +6,7 @@ const getIndex = (context: any) => {
 const getOrderState = async (context: any) => {
     let result = null;
     if (context.params && context.params.id) {
-        result = await fetch('http://localhost:8000/api/v1/restaurant/orders/'+context.params.id, {
+        result = await fetch('http://localhost:8003/api/v1/esb/getorder/'+context.params.id, {
             method: 'GET'
         }).catch(m => {
             console.log(m);
@@ -33,7 +33,7 @@ const getOrderState = async (context: any) => {
 const pickupOrder = async (context: any) => {
     let result = null;
     if (context.params && context.params.id) {
-        result = await fetch('http://localhost:8000/api/v1/restaurant/sendorder/'+context.params.id, {
+        result = await fetch('http://localhost:8003/api/v1/esb/recieveorder/'+context.params.id, {
             method: 'GET'
         }).catch(m => {
             console.log(m);
@@ -63,7 +63,7 @@ const pickupOrder = async (context: any) => {
 const deliveryOrder = async (context: any) => {
     let result = null;
     if (context.params && context.params.id) {
-        result = await fetch('http://localhost:8000/api/v1/restaurant/deliverorder/'+context.params.id, {
+        result = await fetch('http://localhost:8003/api/v1/esb/deliverorder/'+context.params.id, {
             method: 'GET'
         }).catch(m => {
             console.log(m);
